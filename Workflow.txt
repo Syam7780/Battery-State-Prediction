@@ -1,0 +1,75 @@
+1.Load Data
+	- Import experimental battery dataset (fresh/aged cell).
+	- Import OCV vs SOC reference curve.
+2.Preprocess & Standardize
+	- Clean column names.
+	- Compute time differences (dt).
+3.SOC Estimation (Coulomb Counting)
+	- Initialize SOC = 50%.
+	- Update SOC over time using current and capacity.
+	- Clip SOC to [0,1] with voltage conditions.
+4.SOH Estimation
+	- Detect charge/discharge cycles.
+	- Compute delivered capacity per cycle.
+	- Map to SOH reference values.
+5. Price Estimation
+     Simulate Synthetic Data
+	- Fix random seed (rng = np.random.default_rng(42)).
+	- Define number of samples (n = 6000).
+	- Generate Battery Features
+	- SOH: Random values between 0.6 – 1.05.
+	- R_hat: Resistance proxy (depends on SOH, plus noise, clipped).
+	- Temp_mean: Temperature trend (depends on SOH, plus noise, clipped).
+	- Generate Price
+	- Start from base_price = 100.
+	- Price depends positively on SOH, negatively on R_hat, penalized by high temperature, plus random noise.
+	- Create Final DataFrame
+	- Combine generated values into a new df with columns:
+		-['SOH', 'R_hat', 'Temp_mean', 'Price'].
+6.Feature Engineering
+	- Derivatives (dV/dt, dI/dt).
+	- Extra features (|I|, I², temperature).
+	- OCV-based internal resistance proxy (R_hat).
+	- Rolling statistics (mean, std over 60s).
+7.Targets
+	- Define SOC_target and SOH_ref.
+8.Dataset Preparation
+	- Select relevant features + targets.
+	- Save dataset to CSV.
+	- Data Cleaning
+	- Drop nulls.
+	- Remove duplicates.
+	- Reset index.
+	- Identify categorical columns (if any).
+9.Save the Feature columns using joblib
+10.Data visulaization for SoC, SoH and Price
+	- Distribution of outcome Bar graph and line graph
+	- Correlation Matrix
+11.Train-Test split
+12.Building the ML & Dl models for SoC, SoH and Price
+	- Rando Forest
+	- MLP
+	- XGBoost
+	- Voting Classifier( MLP + XGBoost )
+	- DNN
+	- LSTM
+	- Bi-LSTM
+	- GRU
+	- Bi-GRU
+	- CNN
+13.Save the model
+14.Comparing the models with MSE, RMSE, MAE, R2 score
+15.Comparison Graphs are generated with scores of all models
+16.XAI- LIME and SHAP
+
+FrontEnd 
+-------- 
+1. Frontend is developed with help of Flask Framework, along with Registration and Login setup with support of Sqlite DB 
+2. For the frontend we used the data for prediction 
+3. User gives input as Feature Values or CSV data
+4. The given input is preprocessed for prediction 
+5. Trained model is used for prediction 
+6. Final outcome is displayed through frontend
+7. CSV data prediction will be show in XAI graphs and predicted table
+
+

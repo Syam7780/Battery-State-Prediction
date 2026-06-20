@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Prediction Results</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" type="image/x-icon" href="static/assets/img/favicon.ico">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="static/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/assets/css/fontawesome-all.min.css">
+  <link rel="stylesheet" href="static/assets/css/animate.min.css">
+  <link rel="stylesheet" href="static/assets/css/style.css">
+
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Poppins', sans-serif;
+    }
+    h1, h2, h3 {
+      color: #333;
+      font-weight: 600;
+    }
+    .cards {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .stat-card {
+      flex: 1;
+      min-width: 200px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      text-align: center;
+      padding: 20px;
+      transition: transform 0.2s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    .stat-card h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .stat-card p {
+      font-size: 22px;
+      font-weight: 600;
+      color: #007bff;
+    }
+    .plots img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .btn {
+      background: #007bff;
+      color: #fff !important;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: inline-block;
+      text-decoration: none;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+    .table-wrap {
+      margin-top: 20px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      overflow-x: auto;
+    }
+    footer {
+      background: #111;
+      padding: 20px;
+      color: #aaa;
+      text-align: center;
+      font-size: 14px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header-area header-transparent">
+    <div class="main-header">
+      <div class="header-bottom header-sticky">
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <!-- Logo -->
+            <div class="col-xl-2 col-lg-2">
+              <div class="logo">
+                
+              </div>
+            </div>
+            <div class="col-xl-10 col-lg-10">
+              <div class="menu-wrapper d-flex align-items-center justify-content-end">
+                <nav class="main-menu d-none d-lg-block">
+                  <ul id="navigation">
+                    <li><a href="/home">Prediction</a></li>
+                    <li>
+                      <a href="#">Graph</a>
+                      <ul class="submenu">
+                        <li><a href="/about1">SoC</a></li>
+                        <li><a href="/about2">SoH</a></li>
+                        <li><a href="/about3">Price</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#">Notebooks</a>
+                        <ul class="submenu">
+                            <li><a href="static/Preprocessing.html">Preprocessing</a></li>
+                            <li><a href="static/SoC.html">SoC</a></li>
+                            <li><a href="static/SoH.html">SoH</a></li>
+                            <li><a href="static/Price.html">Price</a></li>
+                        </ul>
+                    </li>
+                    <li class="button-header margin-left">
+                      <a href="/login" class="btn">Sign Out</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            <!-- Mobile Menu -->
+            <div class="col-12">
+              <div class="mobile_menu d-block d-lg-none"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="slider-area slider-bg">
+    <div class="single-slider d-flex align-items-center slider-height">
+      <div class="container">
+        <div class="row align-items-center justify-content-between">
+          <div class="col-lg-6">
+            <div class="hero__caption">
+              <h1>Prediction Results</h1>
+              <p>Explainable Data-Driven Digital Twins for Predicting Battery States in Electric Vehicles</p>
+            </div>
+          </div>
+          <div class="col-lg-6 d-none d-lg-block">
+            <img src="static/assets/img/hero/hero_right.png" alt="Hero" class="img-fluid">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <main class="container my-5">
+    {% if mode == 'single' %}
+      <h2>Single Reading</h2>
+      <div class="cards">
+        <div class="stat-card"><h3>SoC</h3><p>{{ '%.2f' % soc }} %</p></div>
+        <div class="stat-card"><h3>SoH</h3><p>{{ '%.2f' % soh }} %</p></div>
+        <div class="stat-card"><h3>Price</h3><p>${{ '%.2f' % price }}</p></div>
+      </div>
+      <a class="btn mt-4" href="/home">← Back</a>
+
+    {% elif mode == 'csv' %}
+      <h2>Generated Plots</h2>
+      <div class="plots mt-3">
+        <h3>SoC Curve</h3>
+        <img src="data:image/png;base64,{{ plots['soc_curve'] }}" alt="SOC Curve">
+
+        <h3>Residuals</h3>
+        <img src="data:image/png;base64,{{ plots['residuals'] }}" alt="Residuals">
+
+        <h3>Residual Histogram</h3>
+        <img src="data:image/png;base64,{{ plots['residual_hist'] }}" alt="Residual Histogram">
+
+        <h3>SHAP Summary</h3>
+        <img src="data:image/png;base64,{{ plots['shap'] }}" alt="SHAP">
+
+        <h3>LIME Explanation</h3>
+        <img src="data:image/png;base64,{{ plots['lime'] }}" alt="LIME">
+
+        <h3>Surrogate Model Feature Importance</h3>
+        <img src="data:image/png;base64,{{ plots['surrogate'] }}" alt="Surrogate">
+      </div>
+
+      <h2 class="mt-5">CSV Preview</h2>
+      <div class="table-wrap">{{ table|safe }}</div>
+
+      <form method="POST" action="/download" class="mt-3">
+        <input type="hidden" name="csv_data" value="{{ csv_data.decode('latin1') }}">
+        <button class="btn" type="submit">Download CSV</button>
+      </form>
+
+      <a class="btn mt-4" href="/home">← Back</a>
+    {% endif %}
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Battery Prediction Dashboard </p>
+  </footer>
+
+  <!-- JS -->
+  <script src="static/assets/js/vendor/jquery-1.12.4.min.js"></script>
+  <script src="static/assets/js/bootstrap.min.js"></script>
+  <script src="static/assets/js/jquery.slicknav.min.js"></script>
+  <script src="static/assets/js/main.js"></script>
+</body>
+</html>
